@@ -57,9 +57,15 @@ def main():
 
     transactions = get_latest_transactions(address)
 
-    print(f"Current balance: {balance} ETH")
+    print(f"Current balance: {balance} ETH\n")
 
-    print(f"Latest trx: {transactions}")
+    names, directions, amounts = transactions
+
+    for name, direction, amount in zip(names, directions, amounts):
+        if direction == "incoming":
+            print(f"+ {amount}, {name}")
+        elif direction == "outgoing":
+            print(f"- {amount}, {name}")
 
 
 if __name__ == "__main__":
