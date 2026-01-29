@@ -36,7 +36,7 @@ def main():
 
     print(f"Current balance: {balance} ETH")
 
-    print(f"Latestm transactions: {transactions}")
+    print(f"Latest transactions: {transactions}")
 
 
 if __name__ == "__main__":
