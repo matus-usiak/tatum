@@ -23,10 +23,14 @@ def get_wallet_balance(walletaddress):
 
 def get_latest_trx(walletaddress):
     url = f"{baseUrl}/data/transaction/history?chain=ethereum-mainnet&addresses={walletaddress}&transactionTypes" \
-          f"=multitoken&sort=desc"
+          f"=multitoken&sort=desc&pageSize=1"
     response = requests.get(url, headers=headers)
     response.raise_for_status()
-    return response.json()
+    data = response.json()
+    chain = data["result"][0]["chain"]
+    tokenaddress = data["result"][0]["tokenAddress"]
+    tokenid = data["result"][0]["tokenId"]
+    return chain, tokenid, tokenaddress
 
 
 def main():
@@ -36,7 +40,7 @@ def main():
 
     print(f"Current balance: {balance} ETH")
 
-    print(f"Latest transactions: {transactions}")
+    print(f"Latest trx: {transactions}")
 
 
 if __name__ == "__main__":
