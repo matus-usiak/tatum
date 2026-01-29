@@ -21,7 +21,7 @@ def get_wallet_balance(walletaddress):
     return balance.quantize(Decimal("0.00000000"), rounding=ROUND_DOWN)
 
 
-def get_latest_trx(walletaddress):
+def get_latest_transactions(walletaddress):
     url = f"{baseUrl}/data/transaction/history?chain=ethereum-mainnet&addresses={walletaddress}&transactionTypes" \
           f"=multitoken&sort=desc&pageSize=10"
     response = requests.get(url, headers=headers)
@@ -30,23 +30,36 @@ def get_latest_trx(walletaddress):
     chain = []
     tokenaddress = []
     tokenid = []
+    direction = []
+    amount = []
+    tokenname = []
     i = 0
     while i < 10:
+        # get data from transaction which are needed to get token info
         chain.append(data["result"][i]["chain"])
         tokenaddress.append(data["result"][i]["tokenAddress"])
         tokenid.append(data["result"][i]["tokenId"])
+        direction.append(data["result"][i]["transactionSubtype"])
+        amount.append(data["result"][i]["amount"])
+
+        # get token info from given transaction
+        url = f"{baseUrl}/data/tokens?chain={chain[0]}&tokenAddress={tokenaddress[0]}&tokenId{tokenid[0]}"
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        tokendata = response.json()
+        tokenname.append(tokendata["name"])
         i += 1
-    return chain, tokenid, tokenaddress
+    return tokenname, direction, amount
 
 
 def main():
     balance = get_wallet_balance(address)
 
-    transactions = get_latest_trx(address)
+    transactions = get_latest_transactions(address)
 
     print(f"Current balance: {balance} ETH")
 
-    print(f"Latest trx: {transactions.__getitem__(0)}")
+    print(f"Latest trx: {transactions}")
 
 
 if __name__ == "__main__":
