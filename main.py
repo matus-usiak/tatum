@@ -23,13 +23,12 @@ def get_wallet_balance(walletaddress):
 
 def get_latest_transactions(walletaddress):
     url = f"{baseUrl}/data/transaction/history?chain=ethereum-mainnet&addresses={walletaddress}&transactionTypes" \
-          f"=multitoken&sort=desc&pageSize=10"
+          f"=fungible,multitoken&sort=desc&pageSize=10"
     response = requests.get(url, headers=headers)
     response.raise_for_status()
     data = response.json()
     chain = []
     tokenaddress = []
-    tokenid = []
     direction = []
     amount = []
     tokenname = []
@@ -38,12 +37,11 @@ def get_latest_transactions(walletaddress):
         # get data from transaction which are needed to get token info
         chain.append(data["result"][i]["chain"])
         tokenaddress.append(data["result"][i]["tokenAddress"])
-        tokenid.append(data["result"][i]["tokenId"])
         direction.append(data["result"][i]["transactionSubtype"])
         amount.append(data["result"][i]["amount"])
 
         # get token info from given transaction
-        url = f"{baseUrl}/data/tokens?chain={chain[0]}&tokenAddress={tokenaddress[0]}&tokenId{tokenid[0]}"
+        url = f"{baseUrl}/data/tokens?chain={chain[i]}&tokenAddress={tokenaddress[i]}"
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         tokendata = response.json()
@@ -59,6 +57,7 @@ def main():
 
     print(f"Current balance: {balance} ETH\n")
 
+    print("Latest transactions:")
     names, directions, amounts = transactions
 
     for name, direction, amount in zip(names, directions, amounts):
