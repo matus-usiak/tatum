@@ -27,21 +27,18 @@ def get_latest_transactions(walletaddress):
     response = requests.get(url, headers=headers)
     response.raise_for_status()
     data = response.json()
-    chain = []
-    tokenaddress = []
     direction = []
     amount = []
     tokenname = []
     i = 0
     while i < 10:
         # get data from transaction which are needed to get token info
-        chain.append(data["result"][i]["chain"])
-        tokenaddress.append(data["result"][i]["tokenAddress"])
+        chain = data["result"][i]["chain"]
+        tokenaddress = data["result"][i]["tokenAddress"]
         direction.append(data["result"][i]["transactionSubtype"])
         amount.append(data["result"][i]["amount"])
 
-        # get token info from given transaction
-        url = f"{baseUrl}/data/tokens?chain={chain[i]}&tokenAddress={tokenaddress[i]}"
+        url = f"{baseUrl}/data/tokens?chain={chain}&tokenAddress={tokenaddress}"
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         tokendata = response.json()
@@ -50,10 +47,28 @@ def get_latest_transactions(walletaddress):
     return tokenname, direction, amount
 
 
+def get_popular_tokens():
+    url = f"{baseUrl}/data/tokens/popular?chain=ethereum-mainnet&timeframe=1d&pagesize=10"
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    data = response.json()
+    return [
+        {
+            "rank": item.get("rank"),
+            "symbol": item.get("symbol"),
+            "priceUSD": item.get("priceUSD"),
+            "priceChanges": item.get("priceChanges", {}).get("1d")
+        }
+        for item in data.get("data", [])
+    ]
+
+
 def main():
     balance = get_wallet_balance(address)
 
     transactions = get_latest_transactions(address)
+
+    top10 = get_popular_tokens()
 
     print(f"Current balance: {balance} ETH\n")
 
@@ -65,6 +80,11 @@ def main():
             print(f"+ {amount}, {name}")
         elif direction == "outgoing":
             print(f"- {amount}, {name}")
+
+    print("\nTop 10 popular tokens:")
+
+    for token in top10:
+        print(f"{token['rank']}. {token['symbol']}, {token['priceUSD']:.2f} USD, {token['priceChanges']}")
 
 
 if __name__ == "__main__":
