@@ -5,11 +5,11 @@ import requests
 # base URL for tatum API
 baseUrl = "https://api.tatum.io/v4"
 # wallet address
-address = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+address = "YOUR_WALLET_ADDRESS"
 # headers to be used in API calls
 headers = {
     "accept": "application/json",
-    "X-Api-Key": "t-69789496ace70350f2244903-a9afc48f474d429ca5f485a0",
+    "X-Api-Key": "YOUR_API_KEY",
     "host": "api.tatum.io"
 }
 
