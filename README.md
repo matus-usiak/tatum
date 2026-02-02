@@ -1,2 +1,2 @@
-Project to showcase part of the [Tatum's API]([url](https://docs.tatum.io/reference/welcome-to-the-tatum-api-reference)) capabilities. It uses [blockchain data]([url](https://docs.tatum.io/reference/blockchain-data-api)) to create a dashboard overview. There a user can see wallet's current balance, last 10 transactions and top 10 most popular tokens. 
+Project to showcase part of the [Tatum's API](https://docs.tatum.io/reference/welcome-to-the-tatum-api-reference) capabilities. It uses [blockchain data](https://docs.tatum.io/reference/blockchain-data-api) to create a dashboard overview. There a user can see wallet's current balance, last 10 transactions and top 10 most popular tokens. 
 In order to use it, you must specify the wallet's address and API key. 
